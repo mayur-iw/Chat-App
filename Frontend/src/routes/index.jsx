@@ -15,7 +15,6 @@ const router = createBrowserRouter([
             {
                 path:"register",
                 element:<Logo><RegisterPage /></Logo>
-
             },
             {
                 path:"email",   
