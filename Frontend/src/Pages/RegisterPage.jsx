@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 // import  '../styles/colors.css'
-import { IoIosClose } from "react-icons/io";
+import { IoClose } from "react-icons/io5";
 
 const RegisterPage = () => {
   const [photo,setphoto]=useState("")
@@ -28,6 +28,12 @@ const RegisterPage = () => {
     setphoto(file);
     console.log("UPloaded photo",file)
   };
+
+  const handleClerUploadPhoto = (e)=>{
+    e.preventDefault()
+    // e.stopPropogation()
+    setphoto("")
+  }
 
   return (
     <div className='mt-5 flex justify-center'>
@@ -85,12 +91,15 @@ const RegisterPage = () => {
                   <label htmlFor='profile_pic'>Profile pic :
 
                     <div className='h-14 bg-slate-200 flex justify-center items-center rounded border-0 hover:border-2 hover:border-[#00adb5] cursor-pointer'>
-                      <p className='text-sm'>
+                      <p className='text-sm max-w-[300px] text-ellipsis line-clamp-1 '>
                         {
                           photo?.name ? photo.name : "Please Upload Your profile Photo :"
                         } 
                       </p>
-                      <button className=''><IoIosClose /></button>
+                      {
+                        photo?<button className='hover:text-red-600' onClick={handleClerUploadPhoto}><IoClose /></button> :""
+                      }
+                     
                     </div>
 
                   </label>
@@ -102,6 +111,7 @@ const RegisterPage = () => {
                     hidden  
                     required
                     onChange={handleChangePhoto}
+
                     >
                   </input>
                 </div>
