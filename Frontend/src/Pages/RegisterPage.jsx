@@ -29,7 +29,7 @@ const RegisterPage = () => {
     console.log("UPloaded photo",file)
   };
 
-  const handleClerUploadPhoto = (e)=>{
+  const handleClerUploadPhoto = (e)=>{ 
     e.preventDefault()
     // e.stopPropogation()
     setphoto("")
