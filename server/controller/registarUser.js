@@ -9,7 +9,7 @@ async function registerUser(req,res) {
 
         if(checkEmail){
             return res.status(400).json({
-                message:"Already user exist",
+                message:"Already user exist mayur",
                 error:true
             })
         }
