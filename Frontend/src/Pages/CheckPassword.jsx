@@ -1,15 +1,21 @@
 import React, { useEffect, useState } from "react";
-import { IoClose } from "react-icons/io5";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import uploadFile from "../helpers/uploadFile";
-import toast, { Toaster } from 'react-hot-toast';
 import axios from "axios";
-import { LuCircleUser } from "react-icons/lu";
 import Avtar from "../component/Avtar";
+import toast,{Toaster} from "react-hot-toast";
+import { setUser ,setToken } from "../redux/UserSlice";
+import { useDispatch } from "react-redux";
 
 const CheckPassword = () => {
     const navigate = useNavigate();
     const location = useLocation();
+    const dispatch = useDispatch();
+    
+    useEffect(()=>{
+      if(!location?.state?.name){
+        navigate('/email')
+      }
+    },[])
     const [data, setdata] = useState({
       password: "",
       userId : ""
@@ -36,14 +42,22 @@ const CheckPassword = () => {
       const URL = `${import.meta.env.VITE_BACKEND_URL}/api/password`;
 
       try {
-        const response = await axios.post(URL,{
+        const response = await axios({
+          method:'post',
+          url:URL,
+          data:{
           userId: location?.state?._id,
           password:data.password
+          },
+          withCredentials:true
         });
 
          toast.success(response.data.message);
-  
-         if(response.data.succsess){
+
+      
+        if(response.data.success){
+            dispatch(setToken(response?.data?.token));
+            localStorage.setItem('token', response?.data.token);
             setdata({
               password: ""
             });
@@ -57,13 +71,15 @@ const CheckPassword = () => {
   return (
     <div className="mt-5 flex justify-center">
           <div className="bg-white w-full max-w-sm mx-4 rounded overflow-hidden p-4">
-            <div className="w-fit mx-auto mb-1">
+            <div className="w-fit mx-auto mb-1 flex justify-center items-center flex-col">
+              <h3 className="font-semibold text-lg mb-2">Welcom to React chat application : </h3>
               {/* <LuCircleUser 
                 size={50}
                 /> */}
-                <Avtar width={70} height={70} />
+                <Avtar name={location.state?.name} width={"70"} height={"80"} imageUrl={location?.state?.profile_pic} />
+                <h1 className="font-semibold text-lg mt-1">{location?.state?.name}</h1>
             </div>
-            <h3>Welcom to React chat application : </h3>
+            
             <form className="mt-3" onSubmit={handleSubmit}>
               <div className="flex flex-col ">
                 <div className="flex flex-col gap-1">
@@ -87,9 +103,9 @@ const CheckPassword = () => {
             </form>
     
             <p className="my-3 text-center">
-              New user ?{" "}
-              <Link to={"/register"} className="hover:text-[#00adb5] font-semibold">
-                Register
+              {" "}
+              <Link to={"/forgot-password"} className="hover:text-[#00adb5] font-semibold">
+                Forgot Password?
               </Link>
             </p>
           </div>
