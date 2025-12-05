@@ -1,8 +1,16 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import Avtar from './Avtar';
 import Devider from './Devider';
+import uploadFile from '../helpers/uploadFile';
+import axios from 'axios';
+import toast from 'react-hot-toast';
+import { useDispatch } from 'react-redux';
+import { setUser } from '../redux/UserSlice';
+
 
 const EditUserDetail = ({onclose,user}) => {
+    const uploadPhotoRef = useRef();
+    const dispatch = useDispatch(); 
     const [formData,setFormData] = useState({
         name : user?.name,
         profile_pic : user?.profile_pic
@@ -17,33 +25,65 @@ const EditUserDetail = ({onclose,user}) => {
         })
     },[user]);
 
+    const handleOpenUploadPhoto = (e)=>{
+            uploadPhotoRef.current.click()
+         e.preventDefault();
+        e.stopPropagation();
+            
+    };
+
     const handleOnChange = (e)=>{
         const {name , value} = e.target;
 
         setFormData((preve)=>{
             return{
                 ...preve,
-                [name] : value
+                [name] : value,
             }
         })
 
     };
 
-    const handleUploadPhoto = async()=>{
+    const handleUploadPhoto = async (e)=>{
         const file = e.target.files[0];
         const uploadedPhoto = await uploadFile(file);
+        
 
-        setdata((preve) => {
+       setFormData((preve) => {
         return {
             ...preve,
-            profile_pic: uploadedPhoto?.url,
-        };
-        });
-    };
+            profile_pic : uploadedPhoto?.url + `?t=${Date.now()}`,
 
-    const handleSubmit = (e)=>{
+        };
+    });
+};
+
+    const handleSubmit = async (e)=>{
         e.preventDefault();
         e.stopPropagation();
+         try {
+              const URL = `${import.meta.env.VITE_BACKEND_URL}/api/update-user`;
+              const response = await axios({
+                method:'post',
+                url:URL,
+                data:formData,
+                withCredentials:true
+              });
+
+               toast.success(response?.data?.message);
+
+              if(response.data.success){
+                dispatch(setUser(response.data.data))
+                onclose()
+               }
+
+              
+            } catch (error) {
+                toast.error(error?.response?.data?.message);
+            
+            }
+
+           
     };
 
   return (
@@ -66,26 +106,32 @@ const EditUserDetail = ({onclose,user}) => {
             </div>
 
             <div>
-                <label htmlFor='profile_pic'>Profile Photo:</label>
-                <div className='my-1 flex items-center gap-4'>
-                    <Avtar
-                    width={40}
-                    height={40}
-                    name={formData.name}
-                    />
-                    <button className='font-semibold'>Change Photo</button>
-                    <input 
-                    type='file'
-                    className='hidden'
-                    onChange={handleUploadPhoto}
-                    />
-                </div>
+                <div>Profile Photo:</div>
+                    <div className='my-1 flex items-center gap-4'>
+                        <Avtar
+                        width={40}
+                        height={40}
+                        name={formData.name}
+                        imageUrl={formData?.profile_pic}
+                        />
+                        <span>{console.log(formData?.profile_pic)}</span>
+                        <label htmlFor='profile_pic'>
+                            <button className='font-semibold' onClick={handleOpenUploadPhoto}>Change Photo</button>
+                            <input 
+                            type='file'
+                            id='profile_pic'
+                            className='hidden'
+                            onChange={handleUploadPhoto}
+                            ref={uploadPhotoRef}
+                            />
+                      </label>    
+                    </div>
             </div>
             
             <Devider />
-            <div className='flex gap-2 w-fit ml-auto mt-3'>
-                <button className='border-[#00adb5] border text-[#00adb5] px-4 py-1 rounded '>Cancle</button>
-                <button className='border-[#00adb5] border text-[#00adb5] px-4 py-1 rounded '>Save</button>
+            <div className='flex gap-2 w-fit ml-auto'>
+                <button onClick={onclose} className='border-[#00adb5] border text-[#00adb5] px-4 py-1 rounded hover:bg-[#00adb5] hover:text-white '>Cancle</button>
+                <button type="button" onClick={handleSubmit} className='border-[#00adb5] border text-[#00adb5] px-4 py-1 rounded hover:bg-[#00adb5] hover:text-white'>Save</button>
             </div>
 
         </form>

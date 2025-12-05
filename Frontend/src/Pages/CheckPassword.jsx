@@ -21,12 +21,13 @@ const CheckPassword = () => {
       userId : ""
     });
 
-    useEffect(()=>{
+    // useEffect(()=>{
 
-    },[]);
+    // },[]);
   
     const handleOnChange = (e) => {
       const { name, value } = e.target;
+      console.log(e.target);
       setdata((preve) => {
         return {
           ...preve,
