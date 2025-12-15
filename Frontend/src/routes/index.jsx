@@ -6,6 +6,7 @@ import CheckPassword from "../Pages/CheckPassword";
 import Home from "../Pages/Home";
 import MessagePage from "../component/MessagePage";
 import Logo from "../layout/Logo";
+import ForgotPassoword from "../Pages/ForgotPassoword";
 
 const router = createBrowserRouter([
     {
@@ -23,6 +24,10 @@ const router = createBrowserRouter([
             {       
                 path:"password",
                 element:<Logo><CheckPassword /></Logo>
+            },
+            {       
+                path:"forgot-password",
+                element:<Logo><ForgotPassoword /></Logo>
             },
             {
                 path:"",

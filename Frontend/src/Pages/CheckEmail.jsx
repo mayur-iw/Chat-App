@@ -1,10 +1,8 @@
 import React, { useState } from "react";
-import { IoClose } from "react-icons/io5";
 import { Link, useNavigate } from "react-router-dom";
-import uploadFile from "../helpers/uploadFile";
-import toast, { Toaster } from 'react-hot-toast';
 import axios from "axios";
-import { LuCircleUser } from "react-icons/lu";
+import toast,{Toaster} from "react-hot-toast";
+import Avtar from "../component/Avtar";
 
 const CheckEmail = () => {
     const navigate = useNavigate();
@@ -31,7 +29,6 @@ const CheckEmail = () => {
         const response = await axios.post(URL, data);
          toast.success(response.data.message);  
          if(response.data.successs){
-          console.log("response.data.success",response.data.success)
             setdata({
               email: ""
             });
@@ -44,16 +41,19 @@ const CheckEmail = () => {
         toast.error(error.response?.data?.message);
       }
     };
+    console.log("location.state?",location.state)
     
   return (
     <div className="mt-5 flex justify-center">
           <div className="bg-white w-full max-w-sm mx-4 rounded overflow-hidden p-4">
-            <div className="w-fit mx-auto mb-1">
-              <LuCircleUser 
+            <div className="w-fit mx-auto mb-1 flex justify-center items-center flex-col">
+              {/* <LuCircleUser 
                 size={50}
-                />
+                /> */}
+                <h3 className="font-semibold text-lg mt-1">Welcom to React chat application : </h3>
+                <Avtar name={location.state?.name} width={"70"} height={"70"} imageUrl={location?.state?.profile_pic}  />
+                {/* <h1 className="font-semibold text-lg mt-1">{location?.state?.name}</h1> */}
             </div>
-            <h3>Welcom to React chat application : </h3>
             <form className="mt-3" onSubmit={handleSubmit}>
               <div className="flex flex-col ">
                 <div className="flex flex-col gap-1">

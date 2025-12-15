@@ -8,7 +8,7 @@ async function logout(req,res) {
         
             res.cookie('token','',cookieOption).status(200).json({
                 message:"session out",
-                succsess : true
+                success : true
             })
         
                 

@@ -40,8 +40,9 @@ const cors = require('cors')
 const connectDB = require('./config/connectDB')
 const router = require('./router/index')
 const cookieParser = require('cookie-parser')
+const { app, server } = require('../server/Socket/socket')
 
-const app = express()
+// const app = express()
 
 // CORS
 app.use(cors({
@@ -66,7 +67,7 @@ app.use('/api', router)
 
 // DB connect + Start server
 connectDB().then(() => {
-    app.listen(PORT, () => {
+    server.listen(PORT, () => {
         console.log("server is running as expected at " + PORT)
     })
 })

@@ -17,6 +17,11 @@ const messageSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
+    messageByUser:{
+        type : mongoose.Schema.ObjectId,
+        require :true,
+        ref : 'user'
+    }
 },{
     timestamps:true 
 })
@@ -25,12 +30,12 @@ const convesationSchema = new mongoose.Schema({
     sender : {
         type : mongoose.Schema.ObjectId,
         require :true,
-        ref : 'User'
+        ref : 'user'
     },
-    reciver : {
+    receiver : {
         type : mongoose.Schema.ObjectId,
         require :true,
-        ref : 'User'
+        ref : 'user'
     },
     messages : [
         {
